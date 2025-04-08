@@ -1,0 +1,9 @@
+# Project Overview
+
+This is a SPA that uses React and Vite, with Jotai for handling state and Tailwind for styling.
+
+## Code Practices
+
+- Keep components relatively simple, if theres a lot of code, use a hook to organize the code better or split in smaller components.
+- Use Jotai Atoms for state, prefer using Atoms across components rather than passing props several levels down.
+- Keep in mind responsive layouts when designing interfaces.
