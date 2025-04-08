@@ -23,7 +23,7 @@ export interface Pokemon {
 export interface Move {
   name: string;
   power: number;
-  type: 'attack' | 'support';
+  type: "attack" | "support";
   effect: string;
 }
 
@@ -32,6 +32,8 @@ export interface Player {
   points: number;
   activeTeam: Pokemon[];
   inventory: Pokemon[];
+  wins: number;
+  losses: number;
 }
 
 export interface Store {

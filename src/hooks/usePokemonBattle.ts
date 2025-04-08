@@ -78,6 +78,8 @@ export const usePokemonBattle = () => {
       ...newPlayer,
       activeTeam: [], // Start with an empty team
       inventory: [],
+      wins: 0,
+      losses: 0,
     });
     await initializeStore();
     setIsLoading(false);
@@ -195,6 +197,9 @@ export const usePokemonBattle = () => {
       setGameOver(true);
       setWinner(!playerAlive ? "enemy" : "player");
       setInBattle(false);
+      setPlayer((prevPlayer) =>
+        prevPlayer ? { ...prevPlayer, losses: prevPlayer.losses + 1 } : null
+      ); // Increment losses
       if (!playerAlive) {
         setBattleLog((prev) => ["Enemy wins the battle!", ...prev]);
       } else {
@@ -204,8 +209,9 @@ export const usePokemonBattle = () => {
           ...prev,
         ]);
         setPlayer({
-          ...player,
-          points: player.points + pointsWon,
+          ...player, // Spread player first
+          points: player.points + pointsWon, // Update points
+          wins: player.wins + 1, // Update wins
         });
         await initializeStore(); // Refresh store after battle
       }
