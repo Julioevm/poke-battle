@@ -1,33 +1,78 @@
-import { Pokemon } from "../types/pokemon";
+import { type Move, type Pokemon as MyPokemon } from "../types/pokemon";
+import { Pokemon as ApiPokemon, PokemonClient } from "pokenode-ts";
+
 const MAX_POKEMON = 151; // Gen 1 Pokémon
 const TEAM_SIZE = 6;
 
-export const getRandomPokemon = async (): Promise<Pokemon> => {
-  const id = Math.floor(Math.random() * MAX_POKEMON) + 1;
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-  const data = await response.json();
+console.log("Initializing Pokémon API clients...");
+const api = new PokemonClient();
 
-  // Get two random moves
-  const attackMove = {
+// Get two random moves
+const attackMove = (data: ApiPokemon) => {
+  return {
     name: data.moves[Math.floor(Math.random() * data.moves.length)].move.name,
     power: Math.floor(Math.random() * 50) + 30,
     type: "attack" as const,
     effect: "Deals damage",
   };
+};
 
-  const supportMove = {
+const boostDefenseMove = (data: ApiPokemon): Move => {
+  return {
     name: data.moves[Math.floor(Math.random() * data.moves.length)].move.name,
     power: Math.floor(Math.random() * 20) + 10,
-    type: "support" as const,
+    type: "boost-defense" as const,
     effect: "Increases defense",
   };
+};
 
-  const pokemon: Pokemon = {
+const boostAttackMove = (data: ApiPokemon): Move => {
+  return {
+    name: data.moves[Math.floor(Math.random() * data.moves.length)].move.name,
+    power: Math.floor(Math.random() * 20) + 10,
+    type: "boost-attack" as const,
+    effect: "Increases attack",
+  };
+};
+
+const boostSpeedMove = (data: ApiPokemon): Move => {
+  return {
+    name: data.moves[Math.floor(Math.random() * data.moves.length)].move.name,
+    power: Math.floor(Math.random() * 20) + 10,
+    type: "boost-speed" as const,
+    effect: "Increases speed",
+  };
+};
+
+const healingMove = (data: ApiPokemon): Move => {
+  return {
+    name: data.moves[Math.floor(Math.random() * data.moves.length)].move.name,
+    power: Math.floor(Math.random() * 20) + 10,
+    type: "healing" as const,
+    effect: "Heals HP",
+  };
+};
+
+const getRandomPokemonMove = (pokemon: ApiPokemon) => {
+  const moves = [
+    boostDefenseMove(pokemon),
+    boostAttackMove(pokemon),
+    boostSpeedMove(pokemon),
+    healingMove(pokemon),
+  ];
+  return moves[Math.floor(Math.random() * moves.length)];
+};
+
+export const getRandomPokemon = async (): Promise<MyPokemon> => {
+  const id = Math.floor(Math.random() * MAX_POKEMON) + 1;
+  const data = await api.getPokemonById(id);
+
+  const pokemon: MyPokemon = {
     id: data.id,
     name: data.name,
     sprites: data.sprites,
     stats: data.stats,
-    moves: [attackMove, supportMove],
+    moves: [attackMove(data), getRandomPokemonMove(data)],
     currentHP: data.stats[0].base_stat,
     maxHP: data.stats[0].base_stat,
     speed: data.stats[5].base_stat,
@@ -44,7 +89,7 @@ export const getRandomPokemon = async (): Promise<Pokemon> => {
 };
 
 export const generateTeam = async (size: number = TEAM_SIZE) => {
-  const team: Pokemon[] = [];
+  const team: MyPokemon[] = [];
   for (let i = 0; i < size; i++) {
     team.push(await getRandomPokemon());
   }

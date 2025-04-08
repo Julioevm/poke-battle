@@ -19,7 +19,6 @@ function App() {
   const { initializeStore } = useStore();
 
   const handlePlayerSetup = async (newPlayer: Player) => {
-    // Player starts with no active team
     setPlayer({
       ...newPlayer,
       activeTeam: [], // Start with an empty team
@@ -47,7 +46,6 @@ function App() {
     if (inBattle && section !== "battle") {
       return; // Prevent section change during battle
     }
-    // Removed automatic startBattle call
     setActiveSection(section);
   };
 

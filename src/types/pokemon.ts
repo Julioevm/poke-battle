@@ -2,7 +2,7 @@ export interface Pokemon {
   id: number;
   name: string;
   sprites: {
-    front_default: string;
+    front_default: string | null;
   };
   stats: {
     base_stat: number;
@@ -23,7 +23,7 @@ export interface Pokemon {
 export interface Move {
   name: string;
   power: number;
-  type: "attack" | "support";
+  type: "attack" | "boost-defense" | "boost-attack" | "boost-speed" | "healing";
   effect: string;
 }
 
