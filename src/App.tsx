@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { usePokemonBattle } from './hooks/usePokemonBattle';
-import { PokemonCard } from './components/PokemonCard';
-import { PlayerSetup } from './components/PlayerSetup';
-import { PokemonStore } from './components/PokemonStore';
-import { TeamManager } from './components/TeamManager';
-import { Play, Loader2, Swords, Users, Store, Home } from 'lucide-react';
+import { useState } from "react";
+import { usePokemonBattle } from "./hooks/usePokemonBattle";
+import { PokemonCard } from "./components/PokemonCard";
+import { PlayerSetup } from "./components/PlayerSetup";
+import { PokemonStore } from "./components/PokemonStore";
+import { TeamManager } from "./components/TeamManager";
+import { Play, Loader2, Swords, Users, Store } from "lucide-react";
 
-type Section = 'battle' | 'team' | 'store';
+type Section = "battle" | "team" | "store";
 
 function App() {
-  const [activeSection, setActiveSection] = useState<Section>('battle');
+  const [activeSection, setActiveSection] = useState<Section>("store");
   const {
     player,
     enemyTeam,
@@ -24,7 +24,8 @@ function App() {
     handlePlayerSetup,
     handlePurchase,
     updatePlayerTeam,
-    inBattle
+    inBattle,
+    startBattle, // Add startBattle here
   } = usePokemonBattle();
 
   if (!player) {
@@ -34,14 +35,17 @@ function App() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-2xl font-bold">Loading battle...</div>
+        <div className="text-2xl font-bold">Loading...</div>
       </div>
     );
   }
 
   const handleSectionChange = (section: Section) => {
-    if (inBattle && section !== 'battle') {
+    if (inBattle && section !== "battle") {
       return; // Prevent section change during battle
+    }
+    if (section === "battle" && !inBattle) {
+      startBattle(); // Call startBattle when navigating to battle for the first time
     }
     setActiveSection(section);
   };
@@ -87,8 +91,8 @@ function App() {
                   disabled={isExecutingTurn || player.activeTeam.length === 0}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                     isExecutingTurn || player.activeTeam.length === 0
-                      ? 'bg-gray-400 cursor-not-allowed' 
-                      : 'bg-blue-500 hover:bg-blue-600 text-white'
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-500 hover:bg-blue-600 text-white"
                   }`}
                 >
                   {isExecutingTurn ? (
@@ -96,7 +100,7 @@ function App() {
                   ) : (
                     <Play size={20} />
                   )}
-                  {isExecutingTurn ? 'Executing Turn...' : 'Next Turn'}
+                  {isExecutingTurn ? "Executing Turn..." : "Next Turn"}
                 </button>
               </div>
             </div>
@@ -106,7 +110,7 @@ function App() {
                 <p
                   key={index}
                   className={`p-2 rounded ${
-                    index === 0 ? 'bg-blue-100' : 'bg-gray-50'
+                    index === 0 ? "bg-blue-100" : "bg-gray-50"
                   }`}
                 >
                   {log}
@@ -120,7 +124,8 @@ function App() {
       {gameOver && (
         <div className="text-center space-y-4">
           <h3 className="text-2xl font-bold">
-            Game Over - {winner === 'player' ? `${player.name} Won!` : 'Enemy Won!'}
+            Game Over -{" "}
+            {winner === "player" ? `${player.name} Won!` : "Enemy Won!"}
           </h3>
           <button
             onClick={() => window.location.reload()}
@@ -142,35 +147,39 @@ function App() {
               <h1 className="text-2xl font-bold">Pokémon Battle</h1>
               <div className="flex items-center space-x-4">
                 <button
-                  onClick={() => handleSectionChange('battle')}
+                  onClick={() => handleSectionChange("battle")}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                    activeSection === 'battle'
-                      ? 'bg-blue-500 text-white'
-                      : 'hover:bg-gray-100'
-                  } ${inBattle && activeSection !== 'battle' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    activeSection === "battle"
+                      ? "bg-blue-500 text-white"
+                      : "hover:bg-gray-100"
+                  } ${
+                    inBattle && activeSection !== "battle"
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
                 >
                   <Swords size={20} />
                   Battle
                 </button>
                 <button
-                  onClick={() => handleSectionChange('team')}
+                  onClick={() => handleSectionChange("team")}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                    activeSection === 'team'
-                      ? 'bg-blue-500 text-white'
-                      : 'hover:bg-gray-100'
-                  } ${inBattle ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    activeSection === "team"
+                      ? "bg-blue-500 text-white"
+                      : "hover:bg-gray-100"
+                  } ${inBattle ? "opacity-50 cursor-not-allowed" : ""}`}
                   disabled={inBattle}
                 >
                   <Users size={20} />
                   Team
                 </button>
                 <button
-                  onClick={() => handleSectionChange('store')}
+                  onClick={() => handleSectionChange("store")}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                    activeSection === 'store'
-                      ? 'bg-blue-500 text-white'
-                      : 'hover:bg-gray-100'
-                  } ${inBattle ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    activeSection === "store"
+                      ? "bg-blue-500 text-white"
+                      : "hover:bg-gray-100"
+                  } ${inBattle ? "opacity-50 cursor-not-allowed" : ""}`}
                   disabled={inBattle}
                 >
                   <Store size={20} />
@@ -181,17 +190,25 @@ function App() {
             <div className="flex items-center space-x-4">
               <span className="text-lg">Trainer: {player.name}</span>
               <span className="text-lg">Points: {player.points}</span>
-              {inBattle && <span className="text-lg">Round {currentRound}</span>}
+              {inBattle && (
+                <span className="text-lg">Round {currentRound}</span>
+              )}
             </div>
           </div>
         </div>
       </nav>
 
       <main className="max-w-7xl mx-auto p-8">
-        {activeSection === 'battle' && renderBattleSection()}
-        {activeSection === 'team' && <TeamManager player={player} onUpdateTeam={updatePlayerTeam} />}
-        {activeSection === 'store' && (
-          <PokemonStore storePokemon={store.pokemon} player={player} onPurchase={handlePurchase} />
+        {activeSection === "battle" && renderBattleSection()}
+        {activeSection === "team" && (
+          <TeamManager player={player} onUpdateTeam={updatePlayerTeam} />
+        )}
+        {activeSection === "store" && (
+          <PokemonStore
+            storePokemon={store.pokemon}
+            player={player}
+            onPurchase={handlePurchase}
+          />
         )}
       </main>
     </div>
