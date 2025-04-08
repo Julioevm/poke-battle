@@ -194,9 +194,15 @@ export const usePokemonBattle = () => {
     const enemyAlive = enemyTeam.some((p) => !p.isKnockedOut);
 
     if (!playerAlive || !enemyAlive) {
+      // End the battle
       setGameOver(true);
       setWinner(!playerAlive ? "enemy" : "player");
       setInBattle(false);
+      // Heal all Pokémon after the battle
+      player.activeTeam.forEach((p) => {
+        p.currentHP = p.maxHP;
+        p.isKnockedOut = false;
+      });
       setPlayer((prevPlayer) =>
         prevPlayer ? { ...prevPlayer, losses: prevPlayer.losses + 1 } : null
       ); // Increment losses
