@@ -2,11 +2,12 @@ import React from "react";
 import { useAtom } from "jotai";
 import { PokemonCard } from "./PokemonCard";
 import { usePokemonBattle } from "../hooks/usePokemonBattle";
-import { playerAtom, storeAtom } from "../atoms/atoms";
+import { playerAtom } from "../atoms/atoms";
+import { useStore } from "../hooks/useStore";
 
 export const PokemonStore: React.FC = () => {
   // Access state using Jotai atoms
-  const [store] = useAtom(storeAtom);
+  const { store } = useStore();
   const [player] = useAtom(playerAtom);
   // Get the purchase action from the custom hook
   const { handlePurchase } = usePokemonBattle();
