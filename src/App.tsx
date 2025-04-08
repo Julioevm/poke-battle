@@ -13,7 +13,6 @@ function App() {
   const {
     player,
     enemyTeam,
-    store,
     isLoading,
     battleLog,
     currentRound,
@@ -22,8 +21,6 @@ function App() {
     executeTurn,
     isExecutingTurn,
     handlePlayerSetup,
-    handlePurchase,
-    updatePlayerTeam,
     inBattle,
     startBattle,
   } = usePokemonBattle();
@@ -255,16 +252,8 @@ function App() {
 
       <main className="max-w-7xl mx-auto p-8">
         {activeSection === "battle" && renderBattleSection()}
-        {activeSection === "team" && (
-          <TeamManager player={player} onUpdateTeam={updatePlayerTeam} />
-        )}
-        {activeSection === "store" && (
-          <PokemonStore
-            storePokemon={store.pokemon}
-            player={player}
-            onPurchase={handlePurchase}
-          />
-        )}
+        {activeSection === "team" && <TeamManager />}
+        {activeSection === "store" && <PokemonStore />}
       </main>
     </div>
   );

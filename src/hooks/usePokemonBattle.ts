@@ -1,5 +1,17 @@
-import { useState } from "react";
-import { Pokemon, Move, Player, Store } from "../types/pokemon";
+import { useAtom } from "jotai";
+import { Pokemon, Move, Player } from "../types/pokemon";
+import {
+  battleLogAtom,
+  currentRoundAtom,
+  enemyTeamAtom,
+  gameOverAtom,
+  inBattleAtom,
+  isExecutingTurnAtom,
+  isLoadingAtom,
+  playerAtom,
+  storeAtom,
+  winnerAtom,
+} from "../atoms/atoms";
 
 const MAX_POKEMON = 151; // Gen 1 Pokémon
 const TEAM_SIZE = 6;
@@ -56,16 +68,16 @@ const generateTeam = async (size: number = TEAM_SIZE) => {
 };
 
 export const usePokemonBattle = () => {
-  const [player, setPlayer] = useState<Player | null>(null);
-  const [enemyTeam, setEnemyTeam] = useState<Pokemon[]>([]);
-  const [store, setStore] = useState<Store>({ pokemon: [] });
-  const [isLoading, setIsLoading] = useState(true);
-  const [battleLog, setBattleLog] = useState<string[]>([]);
-  const [currentRound, setCurrentRound] = useState(1);
-  const [gameOver, setGameOver] = useState(false);
-  const [winner, setWinner] = useState<"player" | "enemy" | null>(null);
-  const [isExecutingTurn, setIsExecutingTurn] = useState(false);
-  const [inBattle, setInBattle] = useState(false);
+  const [player, setPlayer] = useAtom(playerAtom);
+  const [enemyTeam, setEnemyTeam] = useAtom(enemyTeamAtom);
+  const [store, setStore] = useAtom(storeAtom);
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
+  const [battleLog, setBattleLog] = useAtom(battleLogAtom);
+  const [currentRound, setCurrentRound] = useAtom(currentRoundAtom);
+  const [gameOver, setGameOver] = useAtom(gameOverAtom);
+  const [winner, setWinner] = useAtom(winnerAtom);
+  const [isExecutingTurn, setIsExecutingTurn] = useAtom(isExecutingTurnAtom);
+  const [inBattle, setInBattle] = useAtom(inBattleAtom);
 
   const initializeStore = async () => {
     const storePokemon = await generateTeam(STORE_SIZE);
@@ -104,15 +116,6 @@ export const usePokemonBattle = () => {
     });
   };
 
-  const updatePlayerTeam = (activeTeam: Pokemon[], inventory: Pokemon[]) => {
-    if (!player) return;
-    setPlayer({
-      ...player,
-      activeTeam,
-      inventory,
-    });
-  };
-
   const performMove = (attacker: Pokemon, defender: Pokemon, move: Move) => {
     if (move.type === "attack") {
       const damage = Math.floor(
@@ -137,7 +140,6 @@ export const usePokemonBattle = () => {
       return; // Don't start battle without an active team
     }
     if (inBattle) return; // Don't restart if already in battle
-
     setIsLoading(true);
     const newEnemyTeam = await generateTeam();
     setEnemyTeam(newEnemyTeam);
@@ -241,7 +243,6 @@ export const usePokemonBattle = () => {
     isExecutingTurn,
     handlePlayerSetup,
     handlePurchase,
-    updatePlayerTeam,
     inBattle,
     startBattle,
   };
