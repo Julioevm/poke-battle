@@ -22,8 +22,8 @@ export const PokemonStore: React.FC<PokemonStoreProps> = ({
         </div>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {storePokemon.map((pokemon) => (
-          <div key={pokemon.id} className="relative">
+        {storePokemon.map((pokemon, index) => (
+          <div key={`${index}-${pokemon.id}`} className="relative">
             <PokemonCard pokemon={pokemon} />
             <div className="mt-2 text-center">
               <p className="text-lg font-semibold text-green-600">

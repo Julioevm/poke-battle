@@ -77,7 +77,7 @@ function App() {
           <div className="bg-white rounded-lg p-6 shadow-lg">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold">Battle Log</h2>
-              <div className="space-x-4">
+              <div className="space-x-4 flex items-center">
                 {inBattle && (
                   <button
                     onClick={() => window.location.reload()}
