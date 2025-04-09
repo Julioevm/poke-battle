@@ -91,8 +91,24 @@ export const usePokemonBattle = () => {
       return; // Don't start battle without an active team
     }
     if (inBattle) return; // Don't restart if already in battle
+
+    const calculatedBudget = 100 + player.wins * 50;
+
     setIsLoading(true);
-    const newEnemyTeam = await generateTeam();
+    let teamSize = 2;
+    if (calculatedBudget !== undefined) {
+      if (calculatedBudget > 200) {
+        teamSize = 3;
+      } else if (calculatedBudget > 300) {
+        teamSize = 4;
+      } else if (calculatedBudget > 400) {
+        teamSize = 5;
+      }
+      if (calculatedBudget > 500) {
+        teamSize = 6;
+      }
+    }
+    const newEnemyTeam = await generateTeam(teamSize);
     setEnemyTeam(newEnemyTeam);
     setBattleLog(["Battle starts!"]);
     setCurrentRound(1);

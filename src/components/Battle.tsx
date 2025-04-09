@@ -27,7 +27,7 @@ const Battle: React.FC = () => {
               <div>
                 <h2 className="text-2xl font-bold mb-4">Enemy Team</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {enemyTeam.map((pokemon: Pokemon, index) => (
+                  {enemyTeam.map((pokemon: Pokemon, index: number) => (
                     <PokemonCard
                       key={`${index}-${pokemon.id}`}
                       pokemon={pokemon}
@@ -39,7 +39,7 @@ const Battle: React.FC = () => {
               <div>
                 <h2 className="text-2xl font-bold mb-4">Your Team</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {player.activeTeam.map((pokemon: Pokemon, index) => (
+                  {player.activeTeam.map((pokemon: Pokemon, index: number) => (
                     <PokemonCard
                       key={`${index}-${pokemon.id}`}
                       pokemon={pokemon}
