@@ -50,16 +50,34 @@ export const usePokemonBattle = () => {
   };
 
   const performMove = (attacker: Pokemon, defender: Pokemon, move: Move) => {
-    if (move.type === "attack") {
-      const damage = Math.floor(
-        (move.power * attacker.attack) / defender.defense
-      );
-      defender.currentHP = Math.max(0, defender.currentHP - damage);
-      defender.isKnockedOut = defender.currentHP === 0;
-      return `${attacker.name} used ${move.name} on ${defender.name} for ${damage} damage!`;
-    } else {
-      attacker.defense += move.power;
-      return `${attacker.name} used ${move.name} and increased its defense!`;
+    switch (move.type) {
+      case "attack": {
+        const damage = Math.floor(
+          (move.power * attacker.attack) / defender.defense
+        );
+        defender.currentHP = Math.max(0, defender.currentHP - damage);
+        defender.isKnockedOut = defender.currentHP === 0;
+        return `${attacker.name} used ${move.name} on ${defender.name} for ${damage} damage!`;
+      }
+      case "boost-defense":
+        attacker.defense += move.power;
+        return `${attacker.name} used ${move.name} and increased its defense by ${move.power}!`;
+      case "boost-attack":
+        attacker.attack += move.power;
+        return `${attacker.name} used ${move.name} and increased its attack by ${move.power}!`;
+      case "boost-speed":
+        attacker.speed += move.power;
+        return `${attacker.name} used ${move.name} and increased its speed by ${move.power}!`;
+      case "healing": {
+        const healed = Math.min(
+          move.power,
+          attacker.maxHP - attacker.currentHP
+        );
+        attacker.currentHP += healed;
+        return `${attacker.name} used ${move.name} and healed ${healed} HP!`;
+      }
+      default:
+        return `${attacker.name} used ${move.name} but nothing happened.`;
     }
   };
 
