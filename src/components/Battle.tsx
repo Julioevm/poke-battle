@@ -1,8 +1,8 @@
 import React from "react";
 import { PokemonCard } from "./PokemonCard";
 import { Loader2, Play, Swords } from "lucide-react";
-import { Pokemon } from "../types/pokemon";
 import { usePokemonBattle } from "../hooks/usePokemonBattle";
+import { Pokemon } from "../lib/pokemonClass";
 
 const Battle: React.FC = () => {
   const {
@@ -27,16 +27,23 @@ const Battle: React.FC = () => {
               <div>
                 <h2 className="text-2xl font-bold mb-4">Enemy Team</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {enemyTeam.map((pokemon: Pokemon) => (
-                    <PokemonCard key={pokemon.id} pokemon={pokemon} isEnemy />
+                  {enemyTeam.map((pokemon: Pokemon, index) => (
+                    <PokemonCard
+                      key={`${index}-${pokemon.id}`}
+                      pokemon={pokemon}
+                      isEnemy
+                    />
                   ))}
                 </div>
               </div>
               <div>
                 <h2 className="text-2xl font-bold mb-4">Your Team</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {player.activeTeam.map((pokemon: Pokemon) => (
-                    <PokemonCard key={pokemon.id} pokemon={pokemon} />
+                  {player.activeTeam.map((pokemon: Pokemon, index) => (
+                    <PokemonCard
+                      key={`${index}-${pokemon.id}`}
+                      pokemon={pokemon}
+                    />
                   ))}
                 </div>
               </div>

@@ -1,4 +1,6 @@
-export interface Pokemon {
+import { Pokemon } from "../lib/pokemonClass";
+
+export interface IPokemon {
   id: number;
   name: string;
   sprites: {
@@ -14,8 +16,11 @@ export interface Pokemon {
   currentHP: number;
   maxHP: number;
   speed: number;
+  speedBoost?: number;
   attack: number;
+  attackBoost?: number;
   defense: number;
+  defenseBoost?: number;
   isKnockedOut: boolean;
   cost?: number;
 }

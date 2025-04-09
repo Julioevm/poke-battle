@@ -1,5 +1,5 @@
 import React from "react";
-import { Pokemon } from "../types/pokemon";
+import { IPokemon } from "../types/pokemon";
 import { PokemonCard } from "./PokemonCard";
 import { useAtom } from "jotai";
 import { playerAtom } from "../atoms/atoms";
@@ -8,7 +8,7 @@ export const TeamManager: React.FC = () => {
   const [player, setPlayer] = useAtom(playerAtom);
   if (!player) return null;
 
-  const updatePlayerTeam = (activeTeam: Pokemon[], inventory: Pokemon[]) => {
+  const updatePlayerTeam = (activeTeam: IPokemon[], inventory: IPokemon[]) => {
     setPlayer({
       ...player,
       activeTeam,
@@ -16,7 +16,7 @@ export const TeamManager: React.FC = () => {
     });
   };
 
-  const handleSwap = (pokemon: Pokemon, isMovingToTeam: boolean) => {
+  const handleSwap = (pokemon: IPokemon, isMovingToTeam: boolean) => {
     let newActiveTeam = [...player.activeTeam];
     let newInventory = [...player.inventory];
 
@@ -32,7 +32,7 @@ export const TeamManager: React.FC = () => {
     updatePlayerTeam(newActiveTeam, newInventory);
   };
 
-  const handleFree = (pokemon: Pokemon) => {
+  const handleFree = (pokemon: IPokemon) => {
     const newInventory = player.inventory.filter((p) => p.id !== pokemon.id);
     updatePlayerTeam(player.activeTeam, newInventory);
   };

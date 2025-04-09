@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { Pokemon, Move } from "../types/pokemon";
+import { Move } from "../types/pokemon";
 import {
   battleLogAtom,
   currentRoundAtom,
@@ -14,6 +14,7 @@ import {
 } from "../atoms/atoms";
 import { generateTeam } from "../lib/utils";
 import { useStore } from "./useStore";
+import { Pokemon } from "../lib/pokemonClass";
 
 const TURN_DELAY = 1000; // 1 second delay between each action
 
@@ -41,7 +42,7 @@ export const usePokemonBattle = () => {
     setPlayer({
       ...player,
       points: player.points - (pokemon.cost ?? 0),
-      inventory: [...player.inventory, { ...pokemon }],
+      inventory: [...player.inventory, pokemon],
     });
 
     setStore({
@@ -52,28 +53,34 @@ export const usePokemonBattle = () => {
   const performMove = (attacker: Pokemon, defender: Pokemon, move: Move) => {
     switch (move.type) {
       case "attack": {
-        const damage = Math.floor(
-          (move.power * attacker.attack) / defender.defense
+        const moveDamage = move.power;
+        const attack = attacker.getEffectiveAttack();
+        const attackDamage = Math.floor(
+          moveDamage * (attack / defender.getEffectiveDefense())
         );
-        defender.currentHP = Math.max(0, defender.currentHP - damage);
-        defender.isKnockedOut = defender.currentHP === 0;
-        return `${attacker.name} used ${move.name} on ${defender.name} for ${damage} damage!`;
+        console.log("Pokemon", attacker.name);
+
+        console.log("Move Damage:", moveDamage);
+
+        console.log("Attack Damage:", attackDamage);
+
+        defender.takeDamage(attackDamage);
+        return `${attacker.name} used ${move.name} on ${defender.name} for ${attackDamage} damage!`;
       }
       case "boost-defense":
-        attacker.defense += move.power;
+        attacker.boostDefense(move.power);
         return `${attacker.name} used ${move.name} and increased its defense by ${move.power}!`;
       case "boost-attack":
-        attacker.attack += move.power;
+        attacker.boostAttack(move.power);
         return `${attacker.name} used ${move.name} and increased its attack by ${move.power}!`;
       case "boost-speed":
-        attacker.speed += move.power;
+        attacker.boostSpeed(move.power);
         return `${attacker.name} used ${move.name} and increased its speed by ${move.power}!`;
       case "healing": {
-        const healed = Math.min(
-          move.power,
-          attacker.maxHP - attacker.currentHP
-        );
-        attacker.currentHP += healed;
+        if (attacker.currentHP === attacker.maxHP) {
+          return `${attacker.name} used ${move.name} but is already at full health!`;
+        }
+        const healed = attacker.heal(move.power);
         return `${attacker.name} used ${move.name} and healed ${healed} HP!`;
       }
       default:
