@@ -12,7 +12,7 @@ const api = new PokemonClient();
 const attackMove = (data: ApiPokemon) => {
   return {
     name: data.moves[Math.floor(Math.random() * data.moves.length)].move.name,
-    power: Math.floor(Math.random() * 50) + 30,
+    power: Math.floor(Math.random() * 10) + 30,
     type: "attack" as const,
     effect: "Deals damage",
   };

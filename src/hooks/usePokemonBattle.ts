@@ -55,15 +55,8 @@ export const usePokemonBattle = () => {
       case "attack": {
         const moveDamage = move.power;
         const attack = attacker.getEffectiveAttack();
-        const attackDamage = Math.floor(
-          moveDamage * (attack / defender.getEffectiveDefense())
-        );
-        console.log("Pokemon", attacker.name);
-
-        console.log("Move Damage:", moveDamage);
-
-        console.log("Attack Damage:", attackDamage);
-
+        const defense = defender.getEffectiveDefense();
+        const attackDamage = Math.floor(moveDamage * (attack / defense) * 0.5);
         defender.takeDamage(attackDamage);
         return `${attacker.name} used ${move.name} on ${defender.name} for ${attackDamage} damage!`;
       }
