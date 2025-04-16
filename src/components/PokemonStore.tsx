@@ -1,4 +1,3 @@
-import React from "react";
 import { useAtom } from "jotai";
 import { PokemonCard } from "./PokemonCard";
 import { usePokemonBattle } from "../hooks/usePokemonBattle";

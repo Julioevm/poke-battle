@@ -1,4 +1,3 @@
-import React from "react";
 import { IPokemon } from "../types/pokemon";
 
 interface PokemonCardProps {
@@ -22,7 +21,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
       } shadow-md`}
     >
       <img
-        src={pokemon.sprites.front_default}
+        src={pokemon.sprites.front_default ?? undefined}
         alt={pokemon.name}
         className={`w-24 h-24 mx-auto ${
           pokemon.isKnockedOut ? "grayscale" : ""
